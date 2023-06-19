@@ -1,0 +1,33 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           web-audio-hs
+version:        0.0.0
+build-type:     Simple
+
+library
+  exposed-modules:
+      WebAudioMonad
+  other-modules:
+      Paths_web_audio_hs
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , mtl
+  default-language: Haskell2010
+
+executable web-audio-hs-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_web_audio_hs
+  hs-source-dirs:
+      app
+  build-depends:
+      base >=4.7 && <5
+    , mtl
+    , web-audio-hs
+  default-language: Haskell2010

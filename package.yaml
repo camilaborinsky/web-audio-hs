@@ -1,0 +1,16 @@
+name: web-audio-hs
+version: "0.0.0"
+
+library:
+  source-dirs: src
+
+executables:
+  web-audio-hs-exe:
+    main: Main.hs
+    source-dirs: app
+    dependencies:
+      - web-audio-hs
+
+dependencies:
+  - base >= 4.7 && < 5
+  - mtl
