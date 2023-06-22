@@ -1,10 +1,6 @@
-import WebAudioMonad (WebAudioApiCompiler)
+import WebAudioMonad
 
 exampleUsage :: WebAudioApiCompiler ()
 exampleUsage = do
-  node <-
-    createNode
-      OscillatorNode
-      "oscillator"
-      execute
-      node
+  node <- createNode OscillatorNode "oscillator"
+  execute node
