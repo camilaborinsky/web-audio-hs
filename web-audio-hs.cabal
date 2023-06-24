@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -10,6 +10,8 @@ build-type:     Simple
 
 library
   exposed-modules:
+      WebAudioApiCompiler
+      WebAudioApiGraphDrawer
       WebAudioMonad
   other-modules:
       Paths_web_audio_hs
@@ -17,7 +19,14 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , colour >=2.3.6
+    , dlist >=1.0
+    , fgl >=5.8.1.1
+    , graphviz >=2999.20.1.0
     , mtl
+    , polyparse >=1.13
+    , temporary >=1.3
+    , wl-pprint-text >=1.2.0.2
   default-language: Haskell2010
 
 executable web-audio-hs-exe
@@ -28,6 +37,13 @@ executable web-audio-hs-exe
       app
   build-depends:
       base >=4.7 && <5
+    , colour >=2.3.6
+    , dlist >=1.0
+    , fgl >=5.8.1.1
+    , graphviz >=2999.20.1.0
     , mtl
+    , polyparse >=1.13
+    , temporary >=1.3
     , web-audio-hs
+    , wl-pprint-text >=1.2.0.2
   default-language: Haskell2010

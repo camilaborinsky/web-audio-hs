@@ -34,10 +34,17 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
-# - acme-missiles-0.3
-# - git: https://github.com/commercialhaskell/stack.git
-#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
+extra-deps:
+  - colour-2.3.6@sha256:ebdcbf15023958838a527e381ab3c3b1e99ed12d1b25efeb7feaa4ad8c37664a,2378
+  - dlist-1.0@sha256:124cb3aa1decebd5171b46601b1f74cca6cfae12d266ace3799b86dd05ef7cb4,3560
+  - fgl-5.8.1.1@sha256:64e912a9a84f4571d02eef8539bf4eebe3dcf1be9853ca4641cfc01c46dd3c0d,3697
+  - graphviz-2999.20.1.0@sha256:772573528d5e4fe5f818eb00d6f126306d109e38474fd12da55c672960b81e84,7935
+  - polyparse-1.13@sha256:7f9bb348169af5c4858ae2cccc7ac4a9d281f0f6a4d477b26f6f2a71cfff3577,2799
+  - temporary-1.3@sha256:3a66c136f700dbf42f3c5000ca93e80b26dead51e54322c83272b236c1ec8ef1,1485
+  - wl-pprint-text-1.2.0.2@sha256:fee8e19cf54ce188bd1f15cb83079318326ef9a8ea93198b045d60879540f63f,1233
+  - base-compat-0.12.2@sha256:85d820a15e3f00f1781ac939cb9cdccdcc6f38c43e4c74a6e83e5d75f67b61a0,6960
+  - random-1.2.1.1@sha256:dea1f11e5569332dc6c8efaad1cb301016a5587b6754943a49f9de08ae0e56d9,6541
+  - splitmix-0.1.0.4@sha256:db25c2e17967aa6b6046ab8b1b96ba3f344ca59a62b60fb6113d51ea305a3d8e,6537
 #
 # extra-deps: []
 
