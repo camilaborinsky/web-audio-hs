@@ -3,4 +3,12 @@ import WebAudioMonad
 exampleUsage :: WebAudioApiCompiler ()
 exampleUsage = do
   node <- createNode OscillatorNode "oscillator"
-  execute node
+  return ()
+
+main :: IO ()
+main = do
+  -- let (node, _) = runWebAudioApiCompiler exampleUsage
+  putStrLn $ execute exampleUsage
+
+
+
