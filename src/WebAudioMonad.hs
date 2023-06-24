@@ -26,4 +26,4 @@ class Monad m => WebAudioMonad m where
   createNode :: AudioNodeVar -> m AudioNodeVar
 
   -- TODO: HACER MAS GENERICA, O ASEGURARSE QUE EL GRAFO TMB SEA [Char]
-  execute :: m a -> [Char]
+  execute :: m a  -> IO FilePath

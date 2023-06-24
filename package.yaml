@@ -22,3 +22,4 @@ dependencies:
   - wl-pprint-text >= 1.2.0.2
   - graphviz >= 2999.20.1.0
   - text >= 1.2.5.0
+  - filepath >= 1.4.2.2

@@ -22,6 +22,7 @@ library
     , colour >=2.3.6
     , dlist >=1.0
     , fgl >=5.8.1.1
+    , filepath >=1.4.2.2
     , graphviz >=2999.20.1.0
     , mtl
     , polyparse >=1.13
@@ -41,6 +42,7 @@ executable web-audio-hs-exe
     , colour >=2.3.6
     , dlist >=1.0
     , fgl >=5.8.1.1
+    , filepath >=1.4.2.2
     , graphviz >=2999.20.1.0
     , mtl
     , polyparse >=1.13
