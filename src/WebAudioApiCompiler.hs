@@ -8,12 +8,12 @@ newtype WebAudioApiCompiler a = WebAudioApiCompiler {runWebAudioApiCompiler :: W
   deriving (Functor, Applicative, Monad, MonadWriter String)
 
 instance WebAudioMonad WebAudioApiCompiler where
-  createNode audioNode varName = WebAudioApiCompiler $ do
-    let jsCode = generateCreateNewNode audioNode varName
+  createNode audioNode = WebAudioApiCompiler $ do
+    let jsCode = generateCreateNewNode audioNode
     tell jsCode
     return audioNode
 
   execute = execWriter . runWebAudioApiCompiler
 
-generateCreateNewNode :: AudioNode -> [Char] -> [Char]
-generateCreateNewNode OscillatorNode varName = "const " ++ varName ++ " = new OscillatorNode(audioContext);\n"
+generateCreateNewNode :: AudioNodeVar -> [Char]
+generateCreateNewNode (AudioNodeVar (OscillatorNode, varName)) = "const " ++ varName ++ " = new OscillatorNode(audioContext);\n"

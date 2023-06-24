@@ -1,10 +1,11 @@
 import WebAudioApiCompiler
+import WebAudioApiGraphDrawer
 import WebAudioMonad
 
-exampleUsage :: WebAudioApiCompiler ()
+exampleUsage :: WebAudioApiGraphDrawer ()
 exampleUsage = do
-  node <- createNode OscillatorNode "oscillator1"
-  node <- createNode OscillatorNode "oscillator2"
+  node <- createNode $ AudioNodeVar (OscillatorNode, "oscillator1")
+  node <- createNode $ AudioNodeVar (OscillatorNode, "oscillator2")
   return ()
 
 main :: IO ()
