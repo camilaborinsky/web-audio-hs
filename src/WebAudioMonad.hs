@@ -2,25 +2,13 @@
 
 module WebAudioMonad where
 
+import AudioNode
+import Var
+
 data AudioContext = AudioContext
 
-data AudioNode
-  = OscillatorNode
-  | GainNode Double
-  | DelayNode Double
-
-newtype AudioNodeVar = AudioNodeVar (AudioNode, [Char])
-
-instance Show AudioNode where
-  show OscillatorNode = "OscillatorNode"
-  show (GainNode gain) = "GainNode " ++ show gain
-  show (DelayNode delay) = "DelayNode " ++ show delay
-
-instance Eq AudioNodeVar where
-  (AudioNodeVar (_, varName1)) == (AudioNodeVar (_, varName2)) = varName1 == varName2
-
 instance Ord AudioNodeVar where
-  compare (AudioNodeVar (_, varName1)) (AudioNodeVar (_, varName2)) = compare varName1 varName2
+  compare (NamedVar varName1 _) (NamedVar varName2 _) = compare varName1 varName2
 
 class Monad m => WebAudioMonad m where
   -- Add functions specific to WebAudioApi here
@@ -29,6 +17,12 @@ class Monad m => WebAudioMonad m where
 
   -- Create an audio node
   createNode :: AudioNodeVar -> m AudioNodeVar
+
+  -- Connect output of first node to the input of the second node
+  connect :: AudioNodeVar -> AudioNodeVar -> m ()
+
+  -- Disconnect output of first node from the input of the second node
+  disconnect :: AudioNodeVar -> AudioNodeVar -> m ()
 
   -- TODO: HACER MAS GENERICA, O ASEGURARSE QUE EL GRAFO TMB SEA [Char]
   execute :: m a -> IO FilePath

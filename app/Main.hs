@@ -11,8 +11,5 @@ exampleUsage = do
 main :: IO FilePath
 main = do
   -- let (node, _) = runWebAudioApiCompiler exampleUsage
-  -- putStrLn $ executeString exampleUsage
+  putStrLn $ executeString exampleUsage
   execute exampleUsage
-
-
-

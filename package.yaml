@@ -23,3 +23,4 @@ dependencies:
   - graphviz >= 2999.20.1.0
   - text >= 1.2.5.0
   - filepath >= 1.4.2.2
+  - containers >= 0.6.5.1

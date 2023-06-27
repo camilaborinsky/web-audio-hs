@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.0.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -10,6 +10,9 @@ build-type:     Simple
 
 library
   exposed-modules:
+      AudioNode
+      JavaScript
+      Var
       WebAudioApiCompiler
       WebAudioApiGraphDrawer
       WebAudioMonad
@@ -20,6 +23,7 @@ library
   build-depends:
       base >=4.7 && <5
     , colour >=2.3.6
+    , containers >=0.6.5.1
     , dlist >=1.0
     , fgl >=5.8.1.1
     , filepath >=1.4.2.2
@@ -40,6 +44,7 @@ executable web-audio-hs-exe
   build-depends:
       base >=4.7 && <5
     , colour >=2.3.6
+    , containers >=0.6.5.1
     , dlist >=1.0
     , fgl >=5.8.1.1
     , filepath >=1.4.2.2
