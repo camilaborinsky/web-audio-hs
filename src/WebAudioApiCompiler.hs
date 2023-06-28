@@ -31,13 +31,13 @@ instance WebAudioMonad WebAudioApiCompiler where
     tell jsCode
     return audioNode
 
-  connect node1 node2 = WebAudioApiCompiler $ do
-    let jsCode = varName node1 ++ ".connect(" ++ varName node2 ++ ");\n"
+  connect sourceNode destNode = WebAudioApiCompiler $ do
+    let jsCode = varName sourceNode ++ ".connect(" ++ varName destNode ++ ");\n"
     tell jsCode
     return ()
 
-  disconnect node1 node2 = WebAudioApiCompiler $ do
-    let jsCode = varName node1 ++ ".disconnect(" ++ varName node2 ++ ");\n"
+  disconnect sourceNode destNode = WebAudioApiCompiler $ do
+    let jsCode = varName sourceNode ++ ".disconnect(" ++ varName destNode ++ ");\n"
     tell jsCode
     return ()
 

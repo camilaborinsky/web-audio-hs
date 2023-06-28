@@ -43,12 +43,12 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
     modify $ M.insert audioNodeVar []
     return audioNodeVar
 
-  connect node1 node2 = do
-    modify $ M.insertWith (++) node1 [node2]
+  connect sourceNode destNode = do
+    modify $ M.insertWith (++) sourceNode [destNode]
     return ()
 
-  disconnect node1 node2 = do
-    modify $ M.adjust (Prelude.filter (/= node2)) node1
+  disconnect sourceNode destNode = do
+    modify $ M.adjust (Prelude.filter (/= destNode)) sourceNode
     return ()
 
   execute state = createImage . digraph' . graphToDotM $ execState (runWebAudioApiGraphDrawer state) M.empty
