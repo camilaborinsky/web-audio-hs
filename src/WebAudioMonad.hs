@@ -1,11 +1,10 @@
--- {-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 
 module WebAudioMonad where
 
 import AudioNode
 import Var
-
-data AudioContext = AudioContext
 
 instance Ord AudioNodeVar where
   compare (NamedVar varName1 _) (NamedVar varName2 _) = compare varName1 varName2
@@ -13,7 +12,7 @@ instance Ord AudioNodeVar where
 class Monad m => WebAudioMonad m where
   -- Add functions specific to WebAudioApi here
 
-  -- createContext :: [Char] -> m AudioContext
+  createContext :: NamedVar AudioContext -> m (NamedVar AudioContext)
 
   -- Create an audio node
   createNode :: AudioNodeVar -> m AudioNodeVar

@@ -14,10 +14,18 @@ instance JavaScript AudioNode where
   showJSInit (GainNode gain context) = "new GainNode(" ++ varName context ++ ", {gain: " ++ show gain ++ "})"
   showJSInit (DelayNode delay context) = "new DelayNode(" ++ varName context ++ ", {delayTime: " ++ show delay ++ "})"
 
+instance JavaScript AudioContext where
+  showJSInit AudioContext = "new AudioContext()"
+
 newtype WebAudioApiCompiler a = WebAudioApiCompiler {runWebAudioApiCompiler :: Writer String a}
   deriving (Functor, Applicative, Monad, MonadWriter String)
 
 instance WebAudioMonad WebAudioApiCompiler where
+  createContext context = do
+    let jsCode = compileVariableInit context
+    tell jsCode
+    return context
+
   createNode audioNode = WebAudioApiCompiler $ do
     let jsCode = compileVariableInit audioNode
     tell jsCode
