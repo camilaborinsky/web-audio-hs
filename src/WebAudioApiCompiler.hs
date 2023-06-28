@@ -11,8 +11,8 @@ import WebAudioMonad
 -- TODO: Generalizar el parametro de options, ya que todos se inicializan igual
 instance JavaScript AudioNode where
   showJSInit (OscillatorNode context) = "new OscillatorNode(" ++ varName context ++ ")"
-  showJSInit (GainNode gain context) = "new GainNode(" ++ varName context ++ ", {gain: " ++ show gain ++ "})"
-  showJSInit (DelayNode delay context) = "new DelayNode(" ++ varName context ++ ", {delayTime: " ++ show delay ++ "})"
+  showJSInit (GainNode  context) = "new GainNode(" ++ varName context ++")"
+  showJSInit (DelayNode  context) = "new DelayNode(" ++ varName context ++ ")"
 
 instance JavaScript AudioContext where
   showJSInit AudioContext = "new AudioContext()"
@@ -31,6 +31,11 @@ instance WebAudioMonad WebAudioApiCompiler where
     tell jsCode
     return audioNode
 
+  setAudioParam audioNode audioParam = WebAudioApiCompiler $ do
+    let jsCode = varName audioNode ++ "." ++ compileAudioParam audioParam ++ ";\n"
+    tell jsCode
+    return ()
+
   connect sourceNode destNode = WebAudioApiCompiler $ do
     let jsCode = varName sourceNode ++ ".connect(" ++ varName destNode ++ ");\n"
     tell jsCode
@@ -44,6 +49,8 @@ instance WebAudioMonad WebAudioApiCompiler where
   -- TODO: MEJORAR?
   execute compiler = do
     let jsCode = execWriter $ runWebAudioApiCompiler compiler
-    let filePath = "./tmp/output.js" -- choose a file path
+    let filePath = "./tmp/output.js" -- TODO: parametrizar
     writeFile filePath jsCode
     return filePath
+
+ 

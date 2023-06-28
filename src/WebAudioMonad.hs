@@ -4,6 +4,7 @@
 module WebAudioMonad where
 
 import AudioNode
+import AudioParam
 import Var
 
 instance Ord AudioNodeVar where
@@ -17,8 +18,15 @@ class Monad m => WebAudioMonad m where
   -- Create an audio node
   createNode :: AudioNodeVar -> m AudioNodeVar
 
+  -- Set AudioParam to an AudioNode
+  setAudioParam :: AudioNodeVar -> AudioParam -> m ()
+  setAudioParam 
+
+
   -- Connect output of first node to the input of the second node
   connect :: AudioNodeVar -> AudioNodeVar -> m ()
+
+  connectToParam :: AudioNodeVar -> AudioNodeVar -> m ()
 
   -- Disconnect output of first node from the input of the second node
   disconnect :: AudioNodeVar -> AudioNodeVar -> m ()
