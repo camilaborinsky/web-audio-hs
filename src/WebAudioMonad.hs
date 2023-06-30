@@ -19,9 +19,16 @@ class Monad m => WebAudioMonad m where
   createNode :: AudioNodeVar -> m AudioNodeVar
 
   -- Set AudioParam to an AudioNode
-  setAudioParam :: AudioNodeVar -> AudioParam -> m ()
-  setAudioParam 
 
+  -- "node.param.value = 0.5;\n
+  setAudioParam :: AudioNode a => a -> AudioParam -> m ()
+  setAudioParam = compileSetAudioParam
+
+  compileSetParamFreq :: AudioNodeVar -> AudioParam -> m ()
+
+  compileSetParamQ :: AudioNodeVar -> AudioParam -> m ()
+
+  getAudioParam :: AudioNodeVar -> AudioParam -> m ()
 
   -- Connect output of first node to the input of the second node
   connect :: AudioNodeVar -> AudioNodeVar -> m ()

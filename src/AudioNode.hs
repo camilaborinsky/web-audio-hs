@@ -4,6 +4,17 @@ import Var (NamedVar (..))
 
 data AudioContext = AudioContext deriving (Show, Eq)
 
+class AudioParam paramType => AudioNode nodeType paramType outType where
+  compileSetAudioParam :: NamedVar nodeType -> NamedVar paramType -> outType
+
+class AudioParam a
+
+instance AudioNode GainNode String Gain where
+  compileSetAudioParam :: NamedVar GainNode -> NamedVar Gain -> String
+
+instance AudioNode GainNode String Frequency where
+  compileSetAudioParam :: NamedVar GainNode -> NamedVar Frequency -> String
+
 data AudioNode
   = OscillatorNode (NamedVar AudioContext)
   | GainNode (NamedVar AudioContext) -- TODO: testear
@@ -48,8 +59,6 @@ instance Show AudioNode where
   show (AudioScheduledSourceNode _) = "AudioScheduledSourceNode"
   show (AudioDestinationNode _) = "AudioDestinationNode"
   show (AudioBufferSourceNode _) = "AudioBufferSourceNode"
-
-
 
 type AudioNodeVar = NamedVar AudioNode
 
