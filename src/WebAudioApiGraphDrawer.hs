@@ -37,9 +37,8 @@ newtype WebAudioApiGraphDrawer a = WebAudioApiGraphDrawer {runWebAudioApiGraphDr
   deriving (Functor, Applicative, Monad, MonadState AudioGraphState)
 
 instance WebAudioMonad WebAudioApiGraphDrawer where
-  createContext audioContextVar = do
-    return audioContextVar
-  createNode audioNodeVar = do
+  createNode node varName = do
+    let audioNodeVar = NamedVar {varName = varName, varValue = node}
     modify $ M.insert audioNodeVar []
     return audioNodeVar
 

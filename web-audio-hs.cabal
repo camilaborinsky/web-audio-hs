@@ -10,18 +10,23 @@ build-type:     Simple
 
 library
   exposed-modules:
+      AudioContext
       AudioNode
+      AudioParam
       JavaScript
+      JS.Encode
       Var
-      WebAudioApiCompiler
       WebAudioApiGraphDrawer
+      WebAudioApiJS
       WebAudioMonad
   other-modules:
       Paths_web_audio_hs
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson >=2.2.0.0
+    , base >=4.7 && <5
+    , bytestring >=0.11.4.0
     , colour >=2.3.6
     , containers >=0.6.5.1
     , dlist >=1.0
@@ -42,7 +47,9 @@ executable web-audio-hs-exe
   hs-source-dirs:
       app
   build-depends:
-      base >=4.7 && <5
+      aeson >=2.2.0.0
+    , base >=4.7 && <5
+    , bytestring >=0.11.4.0
     , colour >=2.3.6
     , containers >=0.6.5.1
     , dlist >=1.0

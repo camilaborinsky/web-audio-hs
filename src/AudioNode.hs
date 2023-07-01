@@ -1,66 +1,48 @@
 module AudioNode where
 
+import AudioParam
 import Var (NamedVar (..))
 
-data AudioContext = AudioContext deriving (Show, Eq)
+type AudioNodeVar = NamedVar AudioNode
 
+data AudioNode
+  = Oscillator OscillatorNode
+  | Gain GainNode
+  deriving (Eq, Show)
 
+newtype GainNode = GainNode {gain :: AudioParam}
+  deriving (Eq, Show)
 
+data OscWaveType = Sine | Square | Sawtooth | Triangle | Custom
+  deriving (Eq)
 
-data AudioNode = Oscillator OscillatorNode
-               | Gain GainNode
-               | Delay DelayNode
-               | Biquad BiquadFilterNode
-              | Convolver ConvolverNode
-              | Analyser AnalyserNode
-              -- | ChannelSplitter ChannelSplitterNode
-              -- | ChannelMerger ChannelMergerNode
-              -- | DynamicsCompressor DynamicsCompressorNode
-              -- | WaveShaper WaveShaperNode
-              -- | Panner PannerNode
-              -- | StereoPanner StereoPannerNode
-              -- | IIRFilter IIRFilterNode
-              -- | MediaElementAudioSource MediaElementAudioSourceNode
-              -- | MediaStreamAudioSource MediaStreamAudioSourceNode
-              -- | MediaStreamTrackAudioSource MediaStreamTrackAudioSourceNode
-              -- | MediaStreamDestination MediaStreamDestinationNode
-                
+instance Show OscWaveType where
+  show Sine = "sine"
+  show Square = "square"
+  show Sawtooth = "sawtooth"
+  show Triangle = "triangle"
+  show Custom = "custom"
 
-createNode NamedVar (AudioNode (OscillatorNode context (GainParam gain) (Frequency f)) 
-createOscillator 
-setParam node param
+data OscillatorNode = OscillatorNode
+  { frequency :: AudioParam,
+    detune :: AudioParam,
+    waveType :: OscWaveType
+  }
+  deriving (Eq, Show)
 
-setParam :: AudioNode -> AudioParam -> AudioParamValue -> m AudioNode
-setParam (OscillatorNode context gain frequency) Gain value = do 
-    newNode <- OscillatorNode context value frequency
-    return newNode
-setParam (OscillatorNode context gain frequency) Frequency value = do 
-    newNode <- OscillatorNode context gain value
-    return newNode
+createOscillatorNode ::
+  AudioParamValue -> -- frequency value
+  AudioParamValue -> -- detune value
+  OscWaveType -> -- wave type
+  AudioNode
+createOscillatorNode frequencyValue detuneValue waveType =
+  Oscillator
+    OscillatorNode
+      { frequency = AudioParam (FrequencyParam, frequencyValue),
+        detune = AudioParam (DetuneParam, detuneValue),
+        waveType = waveType
+      }
 
-
--- En el main
--- createNode :: AudioNode -> NamedVar AudioContext -> m AudioNodeVar
--- gainNode <- createNode GainDefault "gain1" context
--- gainComplete <- createNode Gain (GainNode 20) "gain2" context
--- setAudioParam gainComplete Gain 40
-
-
-
-data GainNode = Default | GainNode {
-  -- context :: AudioContext,
-  gain :: GainParam,
-} deriving (Eq)
-
-data GainNode = GainNode {
-  -- context :: AudioContext,
-  gain :: GainParam,
-} deriving (Eq)
-
-data OscillatorNode = OscillatorNode {
-  frequency :: FrequencyParam,
-  detune :: DetuneParam,
-}
 -- data GainNode = GainNode (NamedVar AudioContext) -- TODO: testear
 -- data DelayNode = DelayNode (NamedVar AudioContext) -- TODO: testear
 -- data BiquadFilterNode = BiquadFilterNode (NamedVar AudioContext) -- TODO: testear
@@ -80,36 +62,45 @@ data OscillatorNode = OscillatorNode {
 -- data AudioScheduledSourceNode = AudioScheduledSourceNode (NamedVar AudioContext) -- TODO: testear
 -- data AudioDestinationNode = AudioDestinationNode (NamedVar AudioContext) -- TODO: testear
 -- data AudioBufferSourceNode = AudioBufferSourceNode (NamedVar AudioContext) -- TODO: testear
-  deriving (Eq)
 
-instance Show AudioNode where
-  show (OscillatorNode _) = "OscillatorNode"
-  show (GainNode _) = "GainNode"
-  show (DelayNode _) = "DelayNode"
-  show (BiquadFilterNode _) = "BiquadFilterNode"
-  show (ConvolverNode _) = "ConvolverNode"
-  show (AnalyserNode _) = "AnalyserNode"
-  show (ChannelSplitterNode _) = "ChannelSplitterNode"
-  show (ChannelMergerNode _) = "ChannelMergerNode"
-  show (DynamicsCompressorNode _) = "DynamicsCompressorNode"
-  show (WaveShaperNode _) = "WaveShaperNode"
-  show (PannerNode _) = "PannerNode"
-  show (StereoPannerNode _) = "StereoPannerNode"
-  show (IIRFilterNode _) = "IIRFilterNode"
-  show (MediaElementAudioSourceNode _) = "MediaElementAudioSourceNode"
-  show (MediaStreamAudioSourceNode _) = "MediaStreamAudioSourceNode"
-  show (MediaStreamAudioDestinationNode _) = "MediaStreamAudioDestinationNode"
-  show (ConstantSourceNode _) = "ConstantSourceNode"
-  show (AudioScheduledSourceNode _) = "AudioScheduledSourceNode"
-  show (AudioDestinationNode _) = "AudioDestinationNode"
-  show (AudioBufferSourceNode _) = "AudioBufferSourceNode"
-
-
-
-type AudioNodeVar = NamedVar AudioNode
+-- instance Show AudioNode where
+--   show (OscillatorNode _) = "OscillatorNode"
+--   show (GainNode _) = "GainNode"
+--   show (DelayNode _) = "DelayNode"
+--   show (BiquadFilterNode _) = "BiquadFilterNode"
+--   show (ConvolverNode _) = "ConvolverNode"
+--   show (AnalyserNode _) = "AnalyserNode"
+--   show (ChannelSplitterNode _) = "ChannelSplitterNode"
+--   show (ChannelMergerNode _) = "ChannelMergerNode"
+--   show (DynamicsCompressorNode _) = "DynamicsCompressorNode"
+--   show (WaveShaperNode _) = "WaveShaperNode"
+--   show (PannerNode _) = "PannerNode"
+--   show (StereoPannerNode _) = "StereoPannerNode"
+--   show (IIRFilterNode _) = "IIRFilterNode"
+--   show (MediaElementAudioSourceNode _) = "MediaElementAudioSourceNode"
+--   show (MediaStreamAudioSourceNode _) = "MediaStreamAudioSourceNode"
+--   show (MediaStreamAudioDestinationNode _) = "MediaStreamAudioDestinationNode"
+--   show (ConstantSourceNode _) = "ConstantSourceNode"
+--   show (AudioScheduledSourceNode _) = "AudioScheduledSourceNode"
+--   show (AudioDestinationNode _) = "AudioDestinationNode"
+--   show (AudioBufferSourceNode _) = "AudioBufferSourceNode"
 
 -- instance Eq AudioNodeVar where
 --   (AudioNodeVar (_, varName1)) == (AudioNodeVar (_, varName2)) = varName1 == varName2
 
 -- instance Ord AudioNodeVar where
 --   compare (AudioNodeVar (_, varName1)) (AudioNodeVar (_, varName2)) = compare varName1 varName2
+
+-- setParam :: AudioNode -> AudioParam -> AudioParamValue -> m AudioNode
+-- setParam (OscillatorNode context gain frequency) Gain value = do
+--     newNode <- OscillatorNode context value frequency
+--     return newNode
+-- setParam (OscillatorNode context gain frequency) Frequency value = do
+--     newNode <- OscillatorNode context gain value
+--     return newNode
+
+-- En el main
+-- createNode :: AudioNode -> NamedVar AudioContext -> m AudioNodeVar
+-- gainNode <- createNode GainDefault "gain1" context
+-- gainComplete <- createNode Gain (GainNode 20) "gain2" context
+-- setAudioParam gainComplete Gain 40
