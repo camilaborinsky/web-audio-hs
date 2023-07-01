@@ -10,6 +10,8 @@ data AudioParamType = GainParam | DelayTimeParam | FrequencyParam | QParam | Det
 newtype AudioParam = AudioParam (AudioParamType, AudioParamValue)
   deriving (Show, Eq)
 
+type AudioParamVar = NamedVar AudioParam
+
 -- -- data AudioParam = Gain AudioParamValue
 -- --                 | DelayTime AudioParamValue
 -- --                 | Frequency AudioParamValue

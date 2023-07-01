@@ -1,13 +1,15 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module WebAudioApiJS where
 
 import AudioContext
 import AudioNode
+import AudioParam
 import Control.Monad.Writer
 import Data.Aeson
-import qualified Data.ByteString.Lazy as BL
+import Data.ByteString.Lazy qualified as BL
 import Data.Text (unpack)
 import Data.Text.Encoding (decodeUtf8)
 import JS.Encode
@@ -38,10 +40,17 @@ instance WebAudioMonad WebAudioApiJS where
     tell jsCode
     return nodeVar
 
-  -- setAudioParam audioNode audioParam = WebAudioApiJS $ do
-  --   let jsCode = varName audioNode ++ "." ++ compileAudioParam audioParam ++ ";\n"
-  --   tell jsCode
-  --   return ()
+  getAudioParam audioNodeVar paramType paramVarName = do
+    let param = extractParamFromAudioNodeVar audioNodeVar paramType
+    let jsCode = compileGetAudioParam audioNodeVar paramType paramVarName
+    tell jsCode
+    return $ NamedVar {varName = paramVarName, varValue = param}
+
+  setAudioParam audioNodeVar param = do
+    let newNode = updateAudioParamInAudioNodeVar audioNodeVar param
+    let jsCode = compileSetAudioParam audioNodeVar param
+    tell jsCode
+    return newNode
 
   connect sourceNode destNode = WebAudioApiJS $ do
     let jsCode = varName sourceNode ++ ".connect(" ++ varName destNode ++ ");\n"

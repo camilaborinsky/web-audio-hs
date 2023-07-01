@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ImportQualifiedPost #-}
@@ -7,6 +8,7 @@
 module WebAudioApiGraphDrawer where
 
 import AudioNode
+import AudioParam
 import Control.Monad.State
 import Data.GraphViz
 import Data.GraphViz.Printing (PrintDot (..), unqtText)
@@ -31,35 +33,63 @@ instance PrintDot AudioNodeVar where
 --     dotNode = DotNode var []
 -- in unqtDot dotNode
 
-type AudioGraphState = M.Map AudioNodeVar [AudioNodeVar]
+data WebAudioState = WebAudioState
+  { audioGraphState :: M.Map String [String], -- adjacency list
+    audioNodeMap :: M.Map String AudioNodeVar -- map from varName to AudioNodeVar
+  }
 
-newtype WebAudioApiGraphDrawer a = WebAudioApiGraphDrawer {runWebAudioApiGraphDrawer :: State AudioGraphState a}
-  deriving (Functor, Applicative, Monad, MonadState AudioGraphState)
+newtype WebAudioApiGraphDrawer a = WebAudioApiGraphDrawer {runWebAudioApiGraphDrawer :: State WebAudioState a}
+  deriving (Functor, Applicative, Monad, MonadState WebAudioState)
 
 instance WebAudioMonad WebAudioApiGraphDrawer where
   createNode node varName = do
     let audioNodeVar = NamedVar {varName = varName, varValue = node}
-    modify $ M.insert audioNodeVar []
+    modify $ \s ->
+      let graphState' = M.insert varName [] (audioGraphState s)
+          nodeMap' = M.insert varName audioNodeVar (audioNodeMap s)
+       in WebAudioState graphState' nodeMap'
     return audioNodeVar
 
   connect sourceNode destNode = do
-    modify $ M.insertWith (++) sourceNode [destNode]
+    modify $ \s ->
+      let graphState' = M.insertWith (++) (varName sourceNode) [varName destNode] (audioGraphState s)
+       in s {audioGraphState = graphState'}
     return ()
 
   disconnect sourceNode destNode = do
-    modify $ M.adjust (Prelude.filter (/= destNode)) sourceNode
+    modify $ \s ->
+      let graphState' = M.adjust (Prelude.filter (/= varName destNode)) (varName sourceNode) (audioGraphState s)
+       in s {audioGraphState = graphState'}
     return ()
 
-  execute state = createImage . digraph' . graphToDotM $ execState (runWebAudioApiGraphDrawer state) M.empty
+  setAudioParam audioNodeVar newParam = do
+    WebAudioState graphState nodeMap <- get
+    let updatedNodeVar = updateAudioParamInAudioNodeVar audioNodeVar newParam
+    let updatedNodeMap = M.insert (varName audioNodeVar) updatedNodeVar nodeMap
+    put $ WebAudioState graphState updatedNodeMap
+    return updatedNodeVar
+
+  -- TODO: CUIDADO QUE M.! no es safe, puede morir en runtime, la otra alternativa es lookup que devuelve maybe
+  getAudioParam audioNodeVar paramType paramVarName = do
+    WebAudioState _ nodeMap <- get
+    let audioNode = nodeMap M.! varName audioNodeVar
+    let param = extractParamFromAudioNodeVar audioNode paramType
+    return NamedVar {varName = paramVarName, varValue = param}
+
+  execute state =
+    createImage . digraph' . graphToDotM $
+      execState (runWebAudioApiGraphDrawer state) (WebAudioState M.empty M.empty)
 
 -- drawGraph :: PrintDotRepr dg n => dg n -> IO FilePath
 -- TODO Poner bien aux
-aux graph = Prelude.concatMap (\(k, vs) -> Prelude.map (k,) vs) $ M.toList graph
+aux :: WebAudioState -> [(String, String)]
+aux state = Prelude.concatMap (\(k, vs) -> Prelude.map (k,) vs) $ M.toList (audioGraphState state)
 
-graphToDotM :: AudioGraphState -> DotM AudioNodeVar ()
-graphToDotM graph = do
-  mapM_ (\n -> node n [textLabel $ pack $ show (varValue n)]) $ M.keys graph
-  mapM_ (uncurry (-->)) $ aux graph
+graphToDotM :: WebAudioState -> DotM String ()
+graphToDotM state = do
+  let nodes = M.elems $ audioNodeMap state
+  mapM_ (\n -> node (varName n) [textLabel $ pack $ show (varValue n)]) nodes
+  mapM_ (uncurry (-->)) $ aux state
 
 -- let edges = Prelude.concatMap (\(k, vs) -> Prelude.map (k,) vs) $ M.toList graph
 -- mapM_ (uncurry -->) edges
@@ -79,4 +109,4 @@ createImageInDir :: PrintDotRepr dg n => FilePath -> FilePath -> GraphvizOutput 
 createImageInDir d n o g = Data.GraphViz.addExtension (runGraphvizCommand Dot g) o (combine d n)
 
 executeString :: WebAudioApiGraphDrawer a -> [Char]
-executeString state = unpack . printDotGraph . digraph' . graphToDotM $ execState (runWebAudioApiGraphDrawer state) M.empty
+executeString state = unpack . printDotGraph . digraph' . graphToDotM $ execState (runWebAudioApiGraphDrawer state) (WebAudioState M.empty M.empty)

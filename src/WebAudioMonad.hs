@@ -14,11 +14,11 @@ class Monad m => WebAudioMonad m where
   -- Create an audio node in the context given the node and a variable name
   createNode :: AudioNode -> String -> m AudioNodeVar
 
-  -- -- Set AudioParam to an AudioNode
-  -- setAudioParam :: AudioNodeVar -> AudioParam -> m AudioNodeVar
+  -- Set AudioParam to an AudioNode
+  setAudioParam :: AudioNodeVar -> AudioParam -> m AudioNodeVar
 
-  -- -- Set AudioParam to an AudioNode
-  -- getAudioParam :: AudioNodeVar -> AudioParamType -> m AudioParam
+  -- Get AudioParam from an AudioNode, assing it to a variable
+  getAudioParam :: AudioNodeVar -> AudioParamType -> String -> m AudioParamVar
 
   -- Connect output of first node to the input of the second node
   connect :: AudioNodeVar -> AudioNodeVar -> m ()
