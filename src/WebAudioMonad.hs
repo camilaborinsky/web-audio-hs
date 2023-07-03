@@ -23,10 +23,14 @@ class Monad m => WebAudioMonad m where
   -- Connect output of first node to the input of the second node
   connect :: AudioNodeVar -> AudioNodeVar -> m ()
 
-  -- connectToParam :: AudioNodeVar -> AudioNodeVar -> m ()
-
   -- Disconnect output of first node from the input of the second node
   disconnect :: AudioNodeVar -> AudioNodeVar -> m ()
 
+  -- Connect output of first node to another audionode's audioparam
+  connectToParam :: AudioNodeVar -> AudioNodeVar -> AudioParamVar -> m ()
+
+  -- Disconnect output of first node from another audionode's audioparam
+  disconnectFromParam :: AudioNodeVar -> AudioNodeVar -> AudioParamVar -> m ()
+
   -- TODO: HACER MAS GENERICA, O ASEGURARSE QUE EL GRAFO TMB SEA [Char]
-  execute :: m a -> IO FilePath
+  execute :: String -> m a -> IO FilePath

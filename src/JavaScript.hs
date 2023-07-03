@@ -7,6 +7,7 @@ import Var
 class JavaScript a where
   showJSInit :: a -> String
 
+-- TODO: Reubicar funciones propias de nodes a WebAudioApiJS.hs
 compileSetAudioParam :: AudioNodeVar -> AudioParam -> String
 compileSetAudioParam audioNodeVar (AudioParam (paramType, paramValue)) =
   varName audioNodeVar ++ "." ++ compileAudioParamField paramType ++ ".value = " ++ show paramValue ++ ";\n"

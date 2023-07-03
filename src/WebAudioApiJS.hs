@@ -52,21 +52,30 @@ instance WebAudioMonad WebAudioApiJS where
     tell jsCode
     return newNode
 
-  connect sourceNode destNode = WebAudioApiJS $ do
-    let jsCode = varName sourceNode ++ ".connect(" ++ varName destNode ++ ");\n"
+  connect sourceNodeVar destNodeVar = WebAudioApiJS $ do
+    let jsCode = varName sourceNodeVar ++ ".connect(" ++ varName destNodeVar ++ ");\n"
     tell jsCode
     return ()
 
-  disconnect sourceNode destNode = WebAudioApiJS $ do
-    let jsCode = varName sourceNode ++ ".disconnect(" ++ varName destNode ++ ");\n"
+  connectToParam sourceNodeVar _ destParamVar = WebAudioApiJS $ do
+    let jsCode = varName sourceNodeVar ++ ".connect(" ++ varName destParamVar ++ ");\n"
+    tell jsCode
+    return ()
+
+  disconnectFromParam sourceNodeVar _ destParamVar = WebAudioApiJS $ do
+    let jsCode = varName sourceNodeVar ++ ".disconnect(" ++ varName destParamVar ++ ");\n"
+    tell jsCode
+    return ()
+
+  disconnect sourceNodeVar destNodeVar = WebAudioApiJS $ do
+    let jsCode = varName sourceNodeVar ++ ".disconnect(" ++ varName destNodeVar ++ ");\n"
     tell jsCode
     return ()
 
   -- TODO: MEJORAR?
-  execute compiler = do
+  execute filePath compiler = do
     let jsCode = execWriter $ runWebAudioApiJS compiler
     let audioContextInit = compileVariableInit globalAudioContext
     let finalJsCode = audioContextInit ++ jsCode
-    let filePath = "./tmp/output.js" -- TODO: parametrizar
-    writeFile filePath finalJsCode
+    writeFile (filePath ++ ".js") finalJsCode
     return filePath
