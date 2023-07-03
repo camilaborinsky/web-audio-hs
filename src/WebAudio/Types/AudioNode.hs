@@ -43,6 +43,9 @@ createOscillatorNode frequencyValue detuneValue waveType =
         waveType = waveType
       }
 
+createGainNode :: AudioParamValue -> AudioNode
+createGainNode gainValue = Gain GainNode {gain = AudioParam (GainParam, gainValue)}
+
 updateAudioParamInAudioNodeVar :: AudioNodeVar -> AudioParam -> AudioNodeVar
 updateAudioParamInAudioNodeVar (NamedVar varName node) newParam = NamedVar varName $ updateAudioParamInNode node newParam
 
