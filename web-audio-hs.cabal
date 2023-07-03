@@ -12,13 +12,12 @@ library
   exposed-modules:
       GraphDrawer.WebAudioApiGraphDrawer
       JS.Compiler
-      JS.JSON
       JS.WebAudioApiJS
       Var
-      WebAudio.Types
-      WebAudio.Types.AudioContext
-      WebAudio.Types.AudioNode
-      WebAudio.Types.AudioParam
+      WebAudio.AudioGraph
+      WebAudio.AudioGraph.AudioContext
+      WebAudio.AudioGraph.AudioNode
+      WebAudio.AudioGraph.AudioParam
       WebAudio.WebAudioMonad
   other-modules:
       Paths_web_audio_hs

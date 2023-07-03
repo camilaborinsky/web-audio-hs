@@ -1,17 +1,20 @@
 import GraphDrawer.WebAudioApiGraphDrawer
 import JS.WebAudioApiJS
 import Var
-import WebAudio.Types
+import WebAudio.AudioGraph
 import WebAudio.WebAudioMonad
 
 exampleUsage :: WebAudioApiGraphDrawer ()
 exampleUsage = do
   let oscNode = createOscillatorNode 0.5 1.5 Sine
   let gainNode = createGainNode 0.7
+  let delayNode = createDelayNode 0.5
   node1 <- createNode oscNode "oscillator"
   node2 <- createNode gainNode "gain"
+  node3 <- createNode delayNode "delay"
 
   connect node1 node2
+  connectToParam node2 node3 (getAudioParam node3 DelayTimeParam "delayTime")
   return ()
 
 main :: IO FilePath

@@ -1,5 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE GADTs #-}
 
 module JS.WebAudioApiJS
   ( WebAudioApiJS (..),
@@ -7,14 +8,14 @@ module JS.WebAudioApiJS
 where
 
 import Control.Monad.Writer
-import Data.Aeson
 import JS.Compiler
 import Var
-import WebAudio.Types
+import WebAudio.AudioGraph
 import WebAudio.WebAudioMonad
 
 newtype WebAudioApiJS a = WebAudioApiJS {runWebAudioApiJS :: Writer String a}
   deriving (Functor, Applicative, Monad, MonadWriter String)
+
 
 instance WebAudioMonad WebAudioApiJS where
   createNode audioNode varName = WebAudioApiJS $ do
@@ -24,16 +25,17 @@ instance WebAudioMonad WebAudioApiJS where
     return nodeVar
 
   getAudioParam audioNodeVar paramType paramVarName = do
-    let param = extractParamFromAudioNodeVar audioNodeVar paramType
+    let param = extractParamFromAudioNode (varValue audioNodeVar) paramType
     let jsCode = compileGetAudioParam audioNodeVar paramType paramVarName
     tell jsCode
     return $ NamedVar {varName = paramVarName, varValue = param}
 
   setAudioParam audioNodeVar param = do
-    let newNode = updateAudioParamInAudioNodeVar audioNodeVar param
+    let (AudioNode audioNode) = varValue audioNodeVar
+    let newNode = updateAudioParamInNode audioNode param
     let jsCode = compileSetAudioParam audioNodeVar param
     tell jsCode
-    return newNode
+    return $ NamedVar {varName = varName audioNodeVar, varValue = newNode}
 
   connect sourceNodeVar destNodeVar = WebAudioApiJS $ do
     let jsCode = varName sourceNodeVar ++ ".connect(" ++ varName destNodeVar ++ ");\n"

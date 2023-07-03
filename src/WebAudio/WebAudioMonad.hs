@@ -3,7 +3,7 @@
 module WebAudio.WebAudioMonad where
 
 import Var
-import WebAudio.Types
+import WebAudio.AudioGraph
 
 instance Ord AudioNodeVar where
   compare (NamedVar varName1 _) (NamedVar varName2 _) = compare varName1 varName2

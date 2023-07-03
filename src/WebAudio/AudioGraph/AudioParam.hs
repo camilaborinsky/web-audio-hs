@@ -1,4 +1,4 @@
-module WebAudio.Types.AudioParam where
+module WebAudio.AudioGraph.AudioParam where
 
 import Var (NamedVar)
 

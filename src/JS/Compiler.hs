@@ -6,9 +6,10 @@ import Data.Aeson
 import Data.ByteString.Lazy qualified as BL
 import Data.Text (unpack)
 import Data.Text.Encoding (decodeUtf8)
-import JS.JSON
 import Var
-import WebAudio.Types
+import WebAudio.AudioGraph.AudioNode.Types
+import WebAudio.AudioGraph.AudioParam
+import WebAudio.AudioGraph.AudioContext
 
 class ToJSON a => JavaScript a where
   showJSInit :: a -> String
@@ -39,8 +40,7 @@ instance JavaScript AudioContext where
   showJSInit AudioContext = "new " ++ showJSConstructorName AudioContext ++ "()"
 
 instance JavaScript AudioNode where
-  showJSConstructorName (Oscillator _) = "OscillatorNode"
-  showJSConstructorName (Gain _) = "GainNode"
+  showJSConstructorName (AudioNode node) = getAudioNodeType node
 
   showJSInit audioNode =
     let jsonParams = unpack . decodeUtf8 . BL.toStrict $ encode audioNode

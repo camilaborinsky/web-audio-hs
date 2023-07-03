@@ -21,7 +21,7 @@ import Data.Map qualified as M
 import Data.Text.Lazy (Text (..), pack, unpack)
 import System.FilePath
 import Var
-import WebAudio.Types
+import WebAudio.AudioGraph
 import WebAudio.WebAudioMonad
 
 instance PrintDot AudioNodeVar where
@@ -96,7 +96,7 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
 
   setAudioParam audioNodeVar newParam = do
     WebAudioState graphState nodeMap <- get
-    let updatedNodeVar = updateAudioParamInAudioNodeVar audioNodeVar newParam
+    let updatedNodeVar = updateAudioParamInAudioNode (varValue audioNodeVar) newParam
     let updatedNodeMap = M.insert (varName audioNodeVar) updatedNodeVar nodeMap
     put $ WebAudioState graphState updatedNodeMap
     return updatedNodeVar
@@ -104,7 +104,7 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
   getAudioParam audioNodeVar paramType paramVarName = do
     WebAudioState _ nodeMap <- get
     let audioNode = nodeMap M.! varName audioNodeVar
-    let param = extractParamFromAudioNodeVar audioNode paramType
+    let param = extractParamFromAudioNode (varValue audioNodeVar) paramType
     return NamedVar {varName = paramVarName, varValue = param}
 
   execute filePath state =
