@@ -1,10 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module JS.Encode where
+module JS.JSON where
 
-import AudioNode
-import AudioParam
 import Data.Aeson
+import WebAudio.Types
+
+instance ToJSON AudioContext where
+  toJSON AudioContext = object []
+
+instance ToJSON AudioNode where
+  toJSON (Oscillator node) = toJSON node
+  toJSON (Gain node) = toJSON node
 
 instance ToJSON OscillatorNode where
   toJSON (OscillatorNode (AudioParam (FrequencyParam, frequencyValue)) (AudioParam (DetuneParam, detuneValue)) waveType) =

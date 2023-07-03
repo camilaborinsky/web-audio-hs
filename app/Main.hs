@@ -1,9 +1,8 @@
-import AudioNode
-import AudioParam
+import GraphDrawer.WebAudioApiGraphDrawer
+import JS.WebAudioApiJS
 import Var
-import WebAudioApiGraphDrawer
-import WebAudioApiJS
-import WebAudioMonad
+import WebAudio.Types
+import WebAudio.WebAudioMonad
 
 exampleUsage :: WebAudioApiGraphDrawer ()
 exampleUsage = do

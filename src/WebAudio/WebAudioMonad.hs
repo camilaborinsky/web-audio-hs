@@ -1,10 +1,9 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module WebAudioMonad where
+module WebAudio.WebAudioMonad where
 
-import AudioNode
-import AudioParam
 import Var
+import WebAudio.Types
 
 instance Ord AudioNodeVar where
   compare (NamedVar varName1 _) (NamedVar varName2 _) = compare varName1 varName2
@@ -31,5 +30,4 @@ class Monad m => WebAudioMonad m where
   -- Disconnect output of first node from another audionode's audioparam
   disconnectFromParam :: AudioNodeVar -> AudioNodeVar -> AudioParamVar -> m ()
 
-  -- TODO: HACER MAS GENERICA, O ASEGURARSE QUE EL GRAFO TMB SEA [Char]
   execute :: String -> m a -> IO FilePath

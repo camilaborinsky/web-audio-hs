@@ -5,10 +5,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 
-module WebAudioApiGraphDrawer where
+module GraphDrawer.WebAudioApiGraphDrawer where
 
-import AudioNode
-import AudioParam
 import Control.Monad.State
 import Data.GraphViz
 import Data.GraphViz.Attributes.Complete
@@ -23,17 +21,11 @@ import Data.Map qualified as M
 import Data.Text.Lazy (Text (..), pack, unpack)
 import System.FilePath
 import Var
-import WebAudioMonad
+import WebAudio.Types
+import WebAudio.WebAudioMonad
 
 instance PrintDot AudioNodeVar where
   unqtDot audioNode = unqtText $ pack $ varName audioNode
-
--- unqtDot audioNode = unqtText $ pack $ varName audioNode ++ " [label=" ++ show (varValue audioNode) ++ "]"
-
--- let
---     varLabel = textLabel $ pack var
---     dotNode = DotNode var []
--- in unqtDot dotNode
 
 data AudioGraphNodeType = Node | Param
   deriving (Eq, Show, Ord)
@@ -109,7 +101,6 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
     put $ WebAudioState graphState updatedNodeMap
     return updatedNodeVar
 
-  -- TODO: CUIDADO QUE M.! no es safe, puede morir en runtime, la otra alternativa es lookup que devuelve maybe
   getAudioParam audioNodeVar paramType paramVarName = do
     WebAudioState _ nodeMap <- get
     let audioNode = nodeMap M.! varName audioNodeVar
@@ -131,7 +122,6 @@ getClusterID :: AudioGraphNodeRef -> Text
 getClusterID (AudioGraphNodeRef (Node, varName)) = pack $ "cluster_" ++ varName
 getClusterID _ = error "getClusterID: node type is not a cluster"
 
--- TODO: Modularizar?
 graphToDotM :: WebAudioState -> DotM String ()
 graphToDotM state = do
   graphAttrs [Compound True, RankDir FromLeft] -- set the global graph attributes for connecting clusters, make it horizontal with rankdir

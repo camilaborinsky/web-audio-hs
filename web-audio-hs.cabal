@@ -10,15 +10,16 @@ build-type:     Simple
 
 library
   exposed-modules:
-      AudioContext
-      AudioNode
-      AudioParam
-      JavaScript
-      JS.Encode
+      GraphDrawer.WebAudioApiGraphDrawer
+      JS.Compiler
+      JS.JSON
+      JS.WebAudioApiJS
       Var
-      WebAudioApiGraphDrawer
-      WebAudioApiJS
-      WebAudioMonad
+      WebAudio.Types
+      WebAudio.Types.AudioContext
+      WebAudio.Types.AudioNode
+      WebAudio.Types.AudioParam
+      WebAudio.WebAudioMonad
   other-modules:
       Paths_web_audio_hs
   hs-source-dirs:

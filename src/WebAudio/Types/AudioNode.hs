@@ -1,7 +1,7 @@
-module AudioNode where
+module WebAudio.Types.AudioNode where
 
-import AudioParam
 import Var (NamedVar (..))
+import WebAudio.Types.AudioParam
 
 type AudioNodeVar = NamedVar AudioNode
 
@@ -46,22 +46,18 @@ createOscillatorNode frequencyValue detuneValue waveType =
 updateAudioParamInAudioNodeVar :: AudioNodeVar -> AudioParam -> AudioNodeVar
 updateAudioParamInAudioNodeVar (NamedVar varName node) newParam = NamedVar varName $ updateAudioParamInNode node newParam
 
--- TODO: Implement for all params in all nodes
--- TODO: Maybe this should be a method of an AudioNode class?
 updateAudioParamInNode :: AudioNode -> AudioParam -> AudioNode
 updateAudioParamInNode (Oscillator oscNode) newParam@(AudioParam (FrequencyParam, _)) = Oscillator oscNode {frequency = newParam}
 updateAudioParamInNode (Oscillator oscNode) newParam@(AudioParam (DetuneParam, _)) = Oscillator oscNode {detune = newParam}
 updateAudioParamInNode (Gain gainNode) newParam@(AudioParam (GainParam, _)) = Gain gainNode {gain = newParam}
 updateAudioParamInNode _ _ = error "Invalid audio parameter for given node"
 
--- TODO: Implement for all params in all nodes
 extractParamFromAudioNodeVar :: AudioNodeVar -> AudioParamType -> AudioParam
 extractParamFromAudioNodeVar (NamedVar _ (Oscillator oscNode)) FrequencyParam = frequency oscNode
 extractParamFromAudioNodeVar (NamedVar _ (Oscillator oscNode)) DetuneParam = detune oscNode
 extractParamFromAudioNodeVar (NamedVar _ (Gain gainNode)) GainParam = gain gainNode
 extractParamFromAudioNodeVar _ _ = error "Invalid audio parameter for given node"
 
--- TODO: Implement for all nodes
 getParamsFromAudioNode :: AudioNode -> [AudioParam]
 getParamsFromAudioNode (Oscillator oscNode) = [frequency oscNode, detune oscNode]
 getParamsFromAudioNode (Gain gainNode) = [gain gainNode]
