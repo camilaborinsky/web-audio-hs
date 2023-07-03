@@ -19,6 +19,10 @@ library
       WebAudio.Types.AudioContext
       WebAudio.Types.AudioNode
       WebAudio.Types.AudioParam
+      WebAudio.Types.BiquadFilterNode
+      WebAudio.Types.DelayNode
+      WebAudio.Types.GainNode
+      WebAudio.Types.OscillatorNode
       WebAudio.WebAudioMonad
   other-modules:
       Paths_web_audio_hs

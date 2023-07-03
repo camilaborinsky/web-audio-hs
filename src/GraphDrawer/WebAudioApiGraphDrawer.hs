@@ -102,9 +102,7 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
     return updatedNodeVar
 
   getAudioParam audioNodeVar paramType paramVarName = do
-    WebAudioState _ nodeMap <- get
-    let audioNode = nodeMap M.! varName audioNodeVar
-    let param = extractParamFromAudioNodeVar audioNode paramType
+    let param = extractParamFromAudioNode (varValue audioNodeVar) paramType
     return NamedVar {varName = paramVarName, varValue = param}
 
   execute filePath state =

@@ -24,7 +24,7 @@ instance WebAudioMonad WebAudioApiJS where
     return nodeVar
 
   getAudioParam audioNodeVar paramType paramVarName = do
-    let param = extractParamFromAudioNodeVar audioNodeVar paramType
+    let param = extractParamFromAudioNode (varValue audioNodeVar) paramType
     let jsCode = compileGetAudioParam audioNodeVar paramType paramVarName
     tell jsCode
     return $ NamedVar {varName = paramVarName, varValue = param}
