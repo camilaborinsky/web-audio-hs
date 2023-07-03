@@ -64,3 +64,7 @@ extractParamFromAudioNodeVar _ _ = error "Invalid audio parameter for given node
 getParamsFromAudioNode :: AudioNode -> [AudioParam]
 getParamsFromAudioNode (Oscillator oscNode) = [frequency oscNode, detune oscNode]
 getParamsFromAudioNode (Gain gainNode) = [gain gainNode]
+
+getAudioNodeType :: AudioNode -> String
+getAudioNodeType (Oscillator _) = "OscillatorNode"
+getAudioNodeType (Gain _) = "GainNode"

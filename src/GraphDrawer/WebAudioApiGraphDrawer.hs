@@ -131,7 +131,7 @@ graphToDotM state = do
         let nodeName = varName n
         cluster (textGraphID $ pack nodeName) $ do
           -- each audio node is represented as a cluster
-          graphAttrs [textLabel $ pack nodeName] -- set the label for the cluster
+          graphAttrs [textLabel $ pack $ getAudioNodeType (varValue n) ++ "\n" ++ varName n] -- set the label for the cluster
           let params = getParamsFromAudioNode $ varValue n
           mapM_
             ( \param ->
