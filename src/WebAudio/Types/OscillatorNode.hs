@@ -24,5 +24,10 @@ updateAudioParamInOscillatorNode oscNode newParam@(AudioParam (FrequencyParam, _
 updateAudioParamInOscillatorNode oscNode newParam@(AudioParam (DetuneParam, _)) = oscNode {oscDetune = newParam}
 updateAudioParamInOscillatorNode _ _ = error "Invalid audio parameter for given OscillatorNode"
 
+extractParamFromOscillatorNode :: OscillatorNode -> AudioParamType-> AudioParam
+extractParamFromOscillatorNode oscNode FrequencyParam = oscFrequency oscNode
+extractParamFromOscillatorNode oscNode DetuneParam = oscDetune oscNode
+extractParamFromOscillatorNode _ _ = error "Invalid audio parameter for given OscillatorNode"
+
 getParamsFromOscillatorNode :: OscillatorNode -> [AudioParam]
 getParamsFromOscillatorNode oscNode = [oscFrequency oscNode, oscDetune oscNode]

@@ -55,6 +55,64 @@ instance WebAudioMonad WebAudioApiJS where
     tell jsCode
     return ()
 
+  connectToDestination sourceNodeVar = WebAudioApiJS $ do
+    let jsCode = varName sourceNodeVar ++ ".connect(" ++ varName globalAudioContext ++ ".destination);\n"
+    tell jsCode
+    return ()
+
+  startOscillatorNodeAtTime (NamedVar varName (Oscillator oscNode)) time = WebAudioApiJS $ do
+    let jsCode = varName ++ ".start(" ++ show time++ ");\n"
+    tell jsCode
+    return ()
+
+  startOscillatorNode _ = do
+    error "startOscillatorNode: not an oscillator node"
+    return ()
+  
+  stopOscillatorNodeAtTime (NamedVar varName (Oscillator oscNode)) time = WebAudioApiJS $ do
+    let jsCode = varName ++ ".stop("++ show time ++");\n"
+    tell jsCode
+    return ()
+    
+  stopOscillatorNode _ = do
+    error "stopOscillatorNode: not an oscillator node"
+    return ()
+
+  setValueAtTime paramVar value time = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".setValueAtTime(" ++ show value ++ ", " ++ show time ++ ");\n"
+    tell jsCode
+    return ()
+
+  linearRampToValueAtTime paramVar value time = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".linearRampToValueAtTime(" ++ show value ++ ", " ++ show time ++ ");\n"
+    tell jsCode
+    return ()
+  
+  exponentialRampToValueAtTime paramVar value time = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".exponentialRampToValueAtTime(" ++ show value ++ ", " ++ show time ++ ");\n"
+    tell jsCode
+    return ()
+  
+  setTargetAtTime paramVar target time constant = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".setTargetAtTime(" ++ show target ++ ", " ++ show time ++ ", " ++ show constant ++ ");\n"
+    tell jsCode
+    return ()
+
+  setValueCurveAtTime paramVar values time duration = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".setValueCurveAtTime(" ++ show values ++ ", " ++ show time ++ ", " ++ show duration ++ ");\n"
+    tell jsCode
+    return ()
+
+  cancelScheduledValues paramVar time = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".cancelScheduledValues(" ++ show time ++ ");\n"
+    tell jsCode
+    return ()
+  
+  cancelAndHoldAtTime paramVar time = WebAudioApiJS $ do
+    let jsCode = varName paramVar ++ ".cancelAndHoldAtTime(" ++ show time ++ ");\n"
+    tell jsCode
+    return ()
+     
   execute filePath compiler = do
     let jsCode = execWriter $ runWebAudioApiJS compiler
     let audioContextInit = compileVariableInit globalAudioContext

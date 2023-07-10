@@ -31,5 +31,13 @@ updateAudioParamInBiquadFilterNode biquadNode newParam@(AudioParam (QParam, _)) 
 updateAudioParamInBiquadFilterNode biquadNode newParam@(AudioParam (GainParam, _)) = biquadNode {biquadFilterGain = newParam}
 updateAudioParamInBiquadFilterNode _ _ = error "Invalid audio parameter for given BiquadFilterNode"
 
+extractAudioParamFromBiquadFilterNode :: BiquadFilterNode -> AudioParamType -> AudioParam
+extractAudioParamFromBiquadFilterNode biquadNode FrequencyParam = biquadFilterFrequency biquadNode
+extractAudioParamFromBiquadFilterNode biquadNode DetuneParam = biquadFilterDetune biquadNode
+extractAudioParamFromBiquadFilterNode biquadNode QParam = biquadFilterQ biquadNode
+extractAudioParamFromBiquadFilterNode biquadNode GainParam = biquadFilterGain biquadNode
+extractAudioParamFromBiquadFilterNode _ _ = error "Invalid audio parameter for given BiquadFilterNode"
+
+
 getParamsFromBiquadFilterNode :: BiquadFilterNode -> [AudioParam]
 getParamsFromBiquadFilterNode biquadFilterNode = [biquadFilterFrequency biquadFilterNode, biquadFilterDetune biquadFilterNode, biquadFilterQ biquadFilterNode, biquadFilterGain biquadFilterNode]

@@ -14,6 +14,7 @@ data AudioNode
   | Gain GainNode
   | BiquadFilter BiquadFilterNode
   | Delay DelayNode
+  | Destination
   deriving (Eq, Show)
 
 createOscillatorNode ::
@@ -62,17 +63,28 @@ updateAudioParamInAudioNodeVar (NamedVar varName node) newParam = NamedVar varNa
 updateAudioParamInNode :: AudioNode -> AudioParam -> AudioNode
 updateAudioParamInNode (Oscillator oscNode) param = Oscillator $ updateAudioParamInOscillatorNode oscNode param
 updateAudioParamInNode (Gain gainNode) param = Gain $ updateAudioParamInGainNode gainNode param
+updateAudioParamInNode (Delay delayNode) param = Delay $ updateAudioParamInDelayNode delayNode param
+updateAudioParamInNode (BiquadFilter biquadNode) param = BiquadFilter $ updateAudioParamInBiquadFilterNode biquadNode param
+updateAudioParamInNode _ _ = error "Invalid audio parameter for given node"
 
 extractParamFromAudioNode :: AudioNode -> AudioParamType -> AudioParam
-extractParamFromAudioNode (Oscillator oscNode) FrequencyParam = oscFrequency oscNode
-extractParamFromAudioNode (Oscillator oscNode) DetuneParam = oscDetune oscNode
-extractParamFromAudioNode (Gain gainNode) GainParam = gainGain gainNode
-extractParamFromAudioNode _ _ = error "Invalid audio parameter for given node"
+extractParamFromAudioNode (Oscillator oscNode) = extractParamFromOscillatorNode oscNode
+extractParamFromAudioNode (Gain gainNode) = extractParamFromGainNode gainNode
+extractParamFromAudioNode (Delay delayNode) = extractParamFromDelayNode delayNode
+extractParamFromAudioNode (BiquadFilter biquadNode) = extractAudioParamFromBiquadFilterNode biquadNode
+extractParamFromAudioNode _  = error "Invalid audio parameter for given node"
 
 getParamsFromAudioNode :: AudioNode -> [AudioParam]
 getParamsFromAudioNode (Oscillator oscNode) = getParamsFromOscillatorNode oscNode
-getParamsFromAudioNode (Gain gainNode) = [gainGain gainNode]
+getParamsFromAudioNode (Gain gainNode) = getParamsFromGainNode gainNode
+getParamsFromAudioNode (Delay delayNode) = getParamsFromDelayNode delayNode
+getParamsFromAudioNode (BiquadFilter biquadNode) =
+ getParamsFromBiquadFilterNode biquadNode
+getParamsFromAudioNode Destination = []
 
 getAudioNodeType :: AudioNode -> String
 getAudioNodeType (Oscillator _) = "OscillatorNode"
 getAudioNodeType (Gain _) = "GainNode"
+getAudioNodeType (Delay _) = "DelayNode"
+getAudioNodeType (BiquadFilter _) = "BiquadFilterNode"
+getAudioNodeType Destination = "AudioDestinationNode"

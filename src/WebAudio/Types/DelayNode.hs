@@ -9,5 +9,9 @@ updateAudioParamInDelayNode :: DelayNode -> AudioParam -> DelayNode
 updateAudioParamInDelayNode delayNode newParam@(AudioParam (DelayTimeParam, _)) = delayNode {delayDelayTime = newParam}
 updateAudioParamInDelayNode _ _ = error "Invalid audio parameter for given DelayNode"
 
+extractParamFromDelayNode :: DelayNode -> AudioParamType -> AudioParam
+extractParamFromDelayNode delayNode DelayTimeParam = delayDelayTime delayNode
+extractParamFromDelayNode _ _ = error "Invalid audio parameter for given DelayNode"
+
 getParamsFromDelayNode :: DelayNode -> [AudioParam]
 getParamsFromDelayNode delayNode = [delayDelayTime delayNode]

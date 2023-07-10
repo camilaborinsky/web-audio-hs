@@ -105,6 +105,35 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
     let param = extractParamFromAudioNode (varValue audioNodeVar) paramType
     return NamedVar {varName = paramVarName, varValue = param}
 
+  startOscillatorNodeAtTime (NamedVar varName (Oscillator oscNode)) _ = return ()
+  startOscillatorNodeAtTime _ _= do
+    error "startOscillatorNode: node is not an oscillator"
+    return ()
+
+  stopOscillatorNodeAtTime (NamedVar varName (Oscillator oscNode)) _ = return ()
+  stopOscillatorNodeAtTime _ _ = do
+    error "stopOscillatorNode: node is not an oscillator"
+    return ()
+
+  setValueAtTime _ _ _ = return ()
+
+  linearRampToValueAtTime _ _ _ = return ()
+
+  exponentialRampToValueAtTime _ _ _ = return ()
+
+  setTargetAtTime _ _ _ _ = return ()
+
+  setValueCurveAtTime _ _ _ _ = return ()
+  
+  cancelScheduledValues _ _ = return ()
+
+  cancelAndHoldAtTime _ _ = return ()
+
+  connectToDestination audioNodeVar  = do
+    node <- createNode Destination "destination"
+    connect audioNodeVar node
+    return ()
+    
   execute filePath state =
     createImage filePath . digraph' . graphToDotM $
       execState (runWebAudioApiGraphDrawer state) (WebAudioState M.empty M.empty)
