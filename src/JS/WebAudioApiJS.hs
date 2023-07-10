@@ -65,7 +65,7 @@ instance WebAudioMonad WebAudioApiJS where
     tell jsCode
     return ()
 
-  startOscillatorNode _ = do
+  startOscillatorNodeAtTime _ _ = do
     error "startOscillatorNode: not an oscillator node"
     return ()
   
@@ -74,7 +74,7 @@ instance WebAudioMonad WebAudioApiJS where
     tell jsCode
     return ()
     
-  stopOscillatorNode _ = do
+  stopOscillatorNodeAtTime _ _= do
     error "stopOscillatorNode: not an oscillator node"
     return ()
 
