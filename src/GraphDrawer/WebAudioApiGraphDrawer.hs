@@ -106,7 +106,7 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
     return NamedVar {varName = paramVarName, varValue = param}
 
   startOscillatorNodeAtTime (NamedVar varName (Oscillator oscNode)) _ = return ()
-  startOscillatorNodeAtTime _ _= do
+  startOscillatorNodeAtTime _ _ = do
     error "startOscillatorNode: node is not an oscillator"
     return ()
 
@@ -124,16 +124,16 @@ instance WebAudioMonad WebAudioApiGraphDrawer where
   setTargetAtTime _ _ _ _ = return ()
 
   setValueCurveAtTime _ _ _ _ = return ()
-  
+
   cancelScheduledValues _ _ = return ()
 
   cancelAndHoldAtTime _ _ = return ()
 
-  connectToDestination audioNodeVar  = do
+  connectToDestination audioNodeVar = do
     node <- createNode Destination "destination"
     connect audioNodeVar node
     return ()
-    
+
   execute filePath state =
     createImage filePath . digraph' . graphToDotM $
       execState (runWebAudioApiGraphDrawer state) (WebAudioState M.empty M.empty)
@@ -184,8 +184,8 @@ graphToDotM state = do
       (destName ++ "-invisible")
       [LTail $ getClusterID sourceNodeRef, LHead $ getClusterID destNodeRef]
 
-  forM_ audioParamEdges $ \(sourceNodeRef@(AudioGraphNodeRef (_, sourceName)), AudioGraphNodeRef (_, destName)) -> do
-    edge (sourceName ++ "-invisible") destName [LHead $ getClusterID sourceNodeRef]
+  forM_ audioParamEdges $ \(sourceNodeRef@(AudioGraphNodeRef (_, sourceName)), destNodeRef@(AudioGraphNodeRef (_, destName))) -> do
+    edge (sourceName ++ "-invisible") destName [LTail $ getClusterID sourceNodeRef]
 
 createImage :: PrintDotRepr dg n => String -> dg n -> IO FilePath
 createImage filePath = createImageInDir filePath Png
